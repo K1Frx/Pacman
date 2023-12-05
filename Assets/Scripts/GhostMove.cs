@@ -286,7 +286,18 @@ public class GhostMove : MonoBehaviour {
 	void animate()
 	{
 		Vector3 dir = waypoint - transform.position;
-		GetComponent<Animator>().SetFloat("DirX", dir.x);
+		float rotationZ = transform.rotation.z;
+		float rotationY = transform.rotation.y;
+		if(dir.x > 0.5f)
+		{
+			rotationY = 0;
+		}
+		if(dir.x < -0.5f)
+		{
+			rotationY = 180;
+		}
+		transform.rotation = Quaternion.Euler(0, rotationY, rotationZ);
+        GetComponent<Animator>().SetFloat("DirX", dir.x);
 		GetComponent<Animator>().SetFloat("DirY", dir.y);
 		GetComponent<Animator>().SetBool("Run", false);
 	}
@@ -421,6 +432,10 @@ public class GhostMove : MonoBehaviour {
 	{
 		state = State.Run;
 		_direction *= -1;
+		SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+		Color color = spriteRenderer.color;
+		color.a = 0.5f;
+		spriteRenderer.color = color;
 
         _timeToWhite = Time.time + _gm.scareLength * 0.66f;
         _timeToToggleWhite = _timeToWhite;
@@ -432,8 +447,11 @@ public class GhostMove : MonoBehaviour {
 	{
         // if the ghost is not running, do nothing
 	    if (state != State.Run) return;
-
-		waypoints.Clear ();
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Color color = spriteRenderer.color;
+        color.a = 1f;
+        spriteRenderer.color = color;
+        waypoints.Clear ();
 		state = State.Chase;
 	    _timeToToggleWhite = 0;
 	    _timeToWhite = 0;
