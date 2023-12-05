@@ -1,9 +1,14 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+	private bool upButtonClicked = false;
+	private bool downButtonClicked = false;
+	private bool leftButtonClicked = false;
+	private bool rightButtonClicked = false;
 
     public float speed = 0.4f;
     Vector2 _dest = Vector2.zero;
@@ -30,6 +35,28 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+		Button UpButton = GameObject.Find("UpButton").GetComponent<Button>();
+		Button DownButton = GameObject.Find("DownButton").GetComponent<Button>();
+		Button LeftButton = GameObject.Find("LeftButton").GetComponent<Button>();
+		Button RightButton = GameObject.Find("RightButton").GetComponent<Button>();
+
+		if (UpButton != null)
+		{
+			UpButton.onClick.AddListener(MoveUpOnClick);
+		}
+		if (DownButton != null)
+		{
+			DownButton.onClick.AddListener(MoveDownOnClick);
+		}
+		if (LeftButton != null)
+		{
+			LeftButton.onClick.AddListener(MoveLeftOnClick);
+		}
+		if (RightButton != null)
+		{
+			RightButton.onClick.AddListener(MoveRightOnClick);
+		}
+
         GM = GameObject.Find("Game Manager").GetComponent<GameManager>();
         SM = GameObject.Find("Game Manager").GetComponent<ScoreManager>();
         GUINav = GameObject.Find("UI Manager").GetComponent<GameGUINavigation>();
@@ -112,6 +139,28 @@ public class PlayerController : MonoBehaviour
         if (Input.GetAxis("Vertical") > 0) _nextDir = Vector2.up;
         if (Input.GetAxis("Vertical") < 0) _nextDir = -Vector2.up;
 
+		if (upButtonClicked)
+		{
+			// Modify the direction based on button click
+			_nextDir = Vector2.up;  // Adjust this line based on your requirement
+			upButtonClicked = false;  // Reset the flag
+		}
+		if (downButtonClicked)
+		{
+			_nextDir = -Vector2.up;
+			downButtonClicked = false;
+		}
+		if (leftButtonClicked)
+		{
+			_nextDir = -Vector2.right;
+			leftButtonClicked = false;
+		}
+		if (rightButtonClicked)
+		{
+			_nextDir = Vector2.right;
+			rightButtonClicked = false;
+		}
+
         // if pacman is in the center of a tile
         if (Vector2.Distance(_dest, transform.position) < 0.00001f)
         {
@@ -146,4 +195,21 @@ public class PlayerController : MonoBehaviour
         GameManager.score += (int)Mathf.Pow(2, killstreak) * 100;
 
     }
+
+	void MoveUpOnClick()
+	{
+		upButtonClicked = true;
+	}
+	void MoveDownOnClick()
+	{
+		downButtonClicked = true;
+	}
+	void MoveLeftOnClick()
+	{
+		leftButtonClicked = true;
+	}
+	void MoveRightOnClick()
+	{
+		rightButtonClicked = true;
+	}
 }
