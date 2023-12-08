@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; 
 
 public class PlayerController : MonoBehaviour
 {
@@ -97,6 +98,7 @@ public class PlayerController : MonoBehaviour
                 GUINav.getScoresMenu();
             else
                 GUINav.H_ShowGameOverScreen();
+			SceneManager.LoadScene("save_score");  
         }
 
         else
